@@ -305,6 +305,24 @@ function switchMode(mode) {
     // Show selected mode
     document.getElementById(`${mode}Mode`).classList.remove('hidden');
     
+    // Show welcome messages for each mode
+    if (mode === 'battle') {
+        const battleWelcome = document.getElementById('battleWelcome');
+        if (battleWelcome) {
+            battleWelcome.style.display = 'block';
+        }
+    } else if (mode === 'pokedex') {
+        const pokedexWelcome = document.getElementById('pokedexWelcome');
+        if (pokedexWelcome) {
+            pokedexWelcome.style.display = 'block';
+        }
+    } else if (mode === 'quiz') {
+        const quizWelcome = document.getElementById('quizWelcome');
+        if (quizWelcome) {
+            quizWelcome.style.display = 'block';
+        }
+    }
+    
     // Update search placeholder
     const searchInput = document.getElementById('searchInput');
     if (mode === 'battle') {
@@ -462,6 +480,12 @@ function displayPokedexEntry(pokemon, speciesData) {
     const sprite = getPokemonSprite(pokemon.sprites);
     const name = formatPokemonName(pokemon.name);
     const description = getPokemonDescription(speciesData);
+    
+    // Hide welcome message when displaying Pokémon
+    const pokedexWelcome = document.getElementById('pokedexWelcome');
+    if (pokedexWelcome) {
+        pokedexWelcome.style.display = 'none';
+    }
     
     pokedexView.innerHTML = `
         <div class="pokemon-detail">
@@ -729,6 +753,13 @@ async function startNewQuiz() {
     quizScore = 0;
     quizTotal = 0;
     updateQuizScore();
+    
+    // Hide welcome message when starting quiz
+    const quizWelcome = document.getElementById('quizWelcome');
+    if (quizWelcome) {
+        quizWelcome.style.display = 'none';
+    }
+    
     await generateQuizQuestion();
 }
 
