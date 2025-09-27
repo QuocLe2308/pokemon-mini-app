@@ -49,6 +49,14 @@ python -m http.server 8000
 - **User Experience**: AI created functional code, I added welcome messages, loading indicators, and smooth transitions
 - **Code Organization**: AI generated working code, I refactored for maintainability and added comprehensive comments
 
+### My Contributions
+- **Project Planning**: I defined the 4-mode structure and feature requirements
+- **UI/UX Design**: I designed the welcome messages, color schemes, and user flow
+- **Feature Enhancement**: I added the enhanced abilities modal with Pokémon lists
+- **Testing & Debugging**: I identified and fixed UI inconsistencies and performance issues
+- **Deployment**: I set up Netlify deployment and configured auto-deploy
+- **Documentation**: I wrote this README and maintained project documentation
+
 ## 🎨 Design Choices
 
 ### Why 4 Modes Instead of 1
@@ -62,6 +70,13 @@ python -m http.server 8000
 - **PokéAPI v2**: Free API with complete data
 - **Responsive Design**: Mobile-first approach
 - **Error Handling**: Graceful fallbacks for network issues
+
+### Development Process
+1. **Initial Setup**: I created the project structure and basic HTML layout
+2. **AI Collaboration**: I used Cursor AI to generate core functionality and GitHub Copilot for code completion
+3. **Iterative Development**: I tested each feature, provided feedback to AI, and refined the implementation
+4. **User Testing**: I identified UI/UX issues and requested specific improvements
+5. **Final Polish**: I added welcome messages, enhanced abilities modal, and improved overall user experience
 
 ## 🚀 Deployment
 
