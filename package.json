@@ -27,10 +27,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/pokemon-battle-arena.git"
+    "url": "https://github.com/QuocLe2308/pokemon-mini-app.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/pokemon-battle-arena/issues"
+    "url": "https://github.com/QuocLe2308/pokemon-mini-app/issues"
   },
-  "homepage": "https://yourusername.github.io/pokemon-battle-arena"
+  "homepage": "https://quocle2308-pokemon-mini-app.netlify.app"
 }
