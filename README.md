@@ -23,7 +23,12 @@ cd pokemon-mini-app
 
 2. Open `index.html` in your web browser or serve locally:
 ```bash
-python -m http.server 8000
+# Option 1: Direct open
+# Double-click index.html
+
+# Option 2: Local server (recommended)
+npx http-server . -p 3000
+# Then open http://localhost:3000
 ```
 
 ## 🤖 AI Usage
