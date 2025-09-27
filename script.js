@@ -224,6 +224,11 @@ function switchMode(mode) {
         searchInput.style.display = 'none';
         document.getElementById('searchBtn').style.display = 'none';
         document.getElementById('randomBtn').style.display = 'none';
+        
+        // Auto-load Pokémon list when switching to list mode
+        if (pokemonListData.length === 0) {
+            loadPokemonList();
+        }
     } else if (mode === 'quiz') {
         searchInput.style.display = 'none';
         document.getElementById('searchBtn').style.display = 'none';

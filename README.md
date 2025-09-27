@@ -19,6 +19,7 @@ A comprehensive Pokémon Mini App that combines battle simulation, Pokédex func
 
 ### 📋 Pokémon List Mode
 - **Complete Database**: Browse all 1025 Pokémon from all generations
+- **Auto-Load**: Automatically loads Pokémon data when switching to List mode
 - **Smart Pagination**: Load 100 Pokémon at a time for optimal performance
 - **Advanced Filtering**: Filter by type, generation, and search terms
 - **Smart Sorting**: Sort by Pokédex number, name, or any stat
@@ -87,7 +88,7 @@ A comprehensive Pokémon Mini App that combines battle simulation, Pokédex func
 #### 🎮 **Mode Usage**
 1. **Battle Mode**: Use header search to find your fighter, get random opponent, battle!
 2. **Pokédex Mode**: Use header search to see detailed information of ONE Pokémon
-3. **Pokémon List Mode**: Use local search + filters to browse and compare multiple Pokémon
+3. **Pokémon List Mode**: Automatically loads all Pokémon - use filters and search to browse and compare
 4. **Quiz Mode**: Test your Pokémon type knowledge with the interactive quiz
 
 ## 🤖 AI Usage Documentation
@@ -166,20 +167,31 @@ Fully responsive design that works on:
 - 💻 Desktop computers
 - 🖥️ Large screens
 
+## 🌐 Live Demo
+
+**🚀 [Try the Live App on Netlify](https://jocular-pothos-fe4cb2.netlify.app)**
+
+The Pokémon Battle Arena is now live and ready to use! Experience all features including:
+- ⚔️ Real-time Pokémon battles
+- 📖 Complete Pokédex with 1000+ Pokémon
+- 📋 Advanced Pokémon filtering and search
+- 🎮 Interactive type guessing quiz
+
 ## 🚀 Deployment
 
-### GitHub Pages
+### Netlify (Current Deployment)
+- **Live URL**: [https://jocular-pothos-fe4cb2.netlify.app](https://jocular-pothos-fe4cb2.netlify.app)
+- **Repository**: [https://github.com/QuocLe2308/pokemon-mini-app](https://github.com/QuocLe2308/pokemon-mini-app)
+- **Auto-deploy**: Enabled - updates automatically when code is pushed to main branch
+- **Features**: Global CDN, HTTPS, custom domain support
+
+### GitHub Pages (Alternative)
 1. Push code to GitHub repository
 2. Enable GitHub Pages in repository settings
 3. Select source branch (usually `main`)
 4. Access via `https://username.github.io/repository-name`
 
-### Netlify
-1. Connect GitHub repository to Netlify
-2. Deploy automatically on push
-3. Custom domain support available
-
-### Vercel
+### Vercel (Alternative)
 1. Import GitHub repository
 2. Zero-config deployment
 3. Automatic HTTPS and CDN
