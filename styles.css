@@ -120,6 +120,28 @@ button:disabled {
 }
 
 /* Battle Mode Styles */
+.battle-welcome {
+    text-align: center;
+    padding: 40px 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    margin: 20px 0;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.battle-welcome h2 {
+    color: white;
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.battle-welcome p {
+    color: white;
+    font-size: 1.2em;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
 .battle-arena {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
@@ -332,168 +354,377 @@ button:disabled {
 
 .abilities-list {
     display: flex;
-    gap: 10px;
+    gap: 12px;
     flex-wrap: wrap;
-    margin: 10px 0;
+    margin: 15px 0;
+    padding: 15px;
+    background: linear-gradient(145deg, rgba(102, 126, 234, 0.03), rgba(118, 75, 162, 0.03));
+    border-radius: 15px;
+    border: 1px solid rgba(102, 126, 234, 0.1);
+    position: relative;
+}
+
+.abilities-list::before {
+    content: '💫 Click abilities for details';
+    position: absolute;
+    top: -8px;
+    left: 15px;
+    background: white;
+    padding: 0 8px;
+    color: #667eea;
+    font-size: 0.85em;
+    font-weight: 600;
 }
 
 .ability-badge {
-    background: linear-gradient(45deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    padding: 8px 16px;
-    border-radius: 20px;
+    padding: 10px 18px;
+    border-radius: 25px;
     font-size: 14px;
     font-weight: bold;
     text-transform: capitalize;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
     border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.ability-badge::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.6s;
+}
+
+.ability-badge:hover::before {
+    left: 100%;
 }
 
 .ability-badge:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    background: linear-gradient(45deg, #5a6fd8, #6a4190);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    background: linear-gradient(135deg, #5a6fd8, #6a4190);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.ability-badge:active {
+    transform: translateY(-1px) scale(1.02);
 }
 
 .hidden-ability {
-    background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
     border: 2px solid #ff4757;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+    position: relative;
+}
+
+.hidden-ability::after {
+    content: '✨';
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    font-size: 12px;
+    animation: sparkle 2s infinite;
+}
+
+@keyframes sparkle {
+    0%, 100% { opacity: 0; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.2); }
 }
 
 .hidden-ability:hover {
-    background: linear-gradient(45deg, #ff5252, #d63031);
-    box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3);
+    background: linear-gradient(135deg, #ff5252, #d63031);
+    box-shadow: 0 8px 25px rgba(255, 71, 87, 0.5);
+    border-color: #ff3742;
 }
 
-/* Ability Details Modal */
+/* Enhanced Ability Details Modal */
 .ability-details-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.85);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(8px);
+    animation: overlayFadeIn 0.3s ease-out;
+}
+
+@keyframes overlayFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 .ability-details-modal {
-    background: white;
-    border-radius: 20px;
-    max-width: 600px;
-    max-height: 80vh;
+    background: linear-gradient(145deg, #ffffff 0%, #f8f9ff 100%);
+    border-radius: 25px;
+    max-width: 700px;
+    max-height: 90vh;
     width: 90%;
     overflow-y: auto;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    animation: modalSlideIn 0.3s ease-out;
+    box-shadow: 
+        0 25px 80px rgba(0, 0, 0, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    animation: modalSlideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Custom scrollbar for modal */
+.ability-details-modal::-webkit-scrollbar {
+    width: 6px;
+}
+
+.ability-details-modal::-webkit-scrollbar-track {
+    background: rgba(102, 126, 234, 0.1);
+    border-radius: 3px;
+}
+
+.ability-details-modal::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 3px;
+}
+
+.ability-details-modal::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #5a6fd8, #6a4190);
+}
+
+.ability-details-modal::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #667eea, #764ba2, #ff6b6b, #ee5a24);
+    border-radius: 25px 25px 0 0;
 }
 
 @keyframes modalSlideIn {
     from {
         opacity: 0;
-        transform: translateY(-50px) scale(0.9);
+        transform: translateY(-60px) scale(0.85) rotateX(15deg);
     }
     to {
         opacity: 1;
-        transform: translateY(0) scale(1);
+        transform: translateY(0) scale(1) rotateX(0deg);
     }
 }
 
 .ability-header {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    padding: 20px;
-    border-radius: 20px 20px 0 0;
+    padding: 25px 30px;
+    border-radius: 25px 25px 0 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.ability-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
 }
 
 .ability-header h2 {
     margin: 0;
-    font-size: 1.8em;
+    font-size: 2em;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    font-weight: 700;
+    letter-spacing: 1px;
+    position: relative;
+    z-index: 1;
 }
 
 .close-btn {
-    background: none;
-    border: none;
+    background: rgba(255, 255, 255, 0.15);
+    border: 2px solid rgba(255, 255, 255, 0.3);
     color: white;
-    font-size: 2em;
+    font-size: 1.8em;
     cursor: pointer;
     padding: 0;
-    width: 40px;
-    height: 40px;
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    z-index: 1;
+    backdrop-filter: blur(10px);
 }
 
 .close-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: rotate(90deg);
+    background: rgba(255, 255, 255, 0.25);
+    transform: rotate(90deg) scale(1.1);
+    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .ability-content {
-    padding: 30px;
+    padding: 35px;
+    background: linear-gradient(145deg, #ffffff 0%, #f8f9ff 100%);
 }
 
 .ability-description h3,
 .pokemon-with-ability h3 {
-    color: #333;
-    margin-bottom: 15px;
-    font-size: 1.3em;
-    border-bottom: 2px solid #667eea;
-    padding-bottom: 8px;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-size: 1.4em;
+    font-weight: 700;
+    position: relative;
+    padding-left: 15px;
+}
+
+.ability-description h3::before,
+.pokemon-with-ability h3::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 25px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 2px;
 }
 
 .ability-description p {
-    line-height: 1.6;
-    color: #666;
+    line-height: 1.8;
+    color: #555;
     font-size: 1.1em;
-    margin-bottom: 25px;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: rgba(102, 126, 234, 0.05);
+    border-radius: 15px;
+    border-left: 4px solid #667eea;
+    font-style: italic;
 }
 
 .pokemon-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 10px;
-    max-height: 200px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 10px;
+    margin-top: 15px;
+    max-height: 300px;
     overflow-y: auto;
-    padding: 15px;
-    background: rgba(0, 0, 0, 0.05);
-    border-radius: 10px;
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    background: linear-gradient(145deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+    border-radius: 15px;
+    border: 2px solid rgba(102, 126, 234, 0.1);
+    position: relative;
+    align-items: flex-start;
+}
+
+/* Custom scrollbar for pokemon-list */
+.pokemon-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.pokemon-list::-webkit-scrollbar-track {
+    background: rgba(102, 126, 234, 0.1);
+    border-radius: 4px;
+}
+
+.pokemon-list::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 4px;
+    transition: background 0.3s ease;
+}
+
+.pokemon-list::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #5a6fd8, #6a4190);
+}
+
+.ability-details-modal .pokemon-with-ability .pokemon-list::before {
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    background: white;
+    padding: 0 10px;
+    color: #667eea;
+    font-size: 0.9em;
+    font-weight: 600;
 }
 
 .pokemon-name {
     background: linear-gradient(135deg, #ff6b6b, #ee5a24);
     color: white;
-    padding: 6px 12px;
-    border-radius: 20px;
+    padding: 8px 12px;
+    border-radius: 18px;
     cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 0.9em;
-    font-weight: bold;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    font-size: 0.85em;
+    font-weight: 600;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    border: none;
+    box-shadow: 0 2px 8px rgba(255, 107, 107, 0.25);
+    border: 2px solid transparent;
     white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.pokemon-name::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.6s;
+}
+
+.pokemon-name:hover::before {
+    left: 100%;
 }
 
 .pokemon-name:hover {
     background: linear-gradient(135deg, #ff5252, #d63031);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 6px 20px rgba(255, 71, 87, 0.4);
+    border-color: rgba(255, 255, 255, 0.3);
 }
+
+.pokemon-name:active {
+    transform: translateY(-1px) scale(1.02);
+}
+
 
 /* List Mode Styles */
 .list-controls {
@@ -840,4 +1071,157 @@ button:disabled {
 
 .hidden {
     display: none !important;
+}
+/* Ability Modal Styles - Thêm vào cuối file styles.css */
+.ability-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.ability-modal-backdrop.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.ability-modal {
+    background: white;
+    border-radius: 20px;
+    max-width: 90vw;
+    width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 25px 75px rgba(0, 0, 0, 0.4);
+    transform: translateY(50px) scale(0.9);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.ability-modal-backdrop.active .ability-modal {
+    transform: translateY(0) scale(1);
+}
+
+.ability-modal-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 25px 30px;
+    border-radius: 20px 20px 0 0;
+    position: relative;
+}
+
+.ability-modal-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.ability-modal-close {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: all 0.3s ease;
+}
+
+.ability-modal-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+.ability-modal-content {
+    padding: 30px;
+}
+
+.ability-description {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 25px;
+    border-left: 4px solid #667eea;
+}
+
+.ability-description h3 {
+    color: #333;
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+.ability-description p {
+    color: #666;
+    line-height: 1.6;
+    font-size: 16px;
+}
+
+.ability-pokemon-list h3 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 18px;
+}
+
+.ability-pokemon-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 15px;
+}
+
+.ability-pokemon-item {
+    background: white;
+    padding: 12px 8px;
+    border-radius: 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.ability-pokemon-item:hover {
+    border-color: #667eea;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+}
+
+.ability-pokemon-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    text-transform: capitalize;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .ability-modal {
+        width: 95vw;
+        margin: 20px;
+    }
+    
+    .ability-pokemon-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 8px;
+    }
 }

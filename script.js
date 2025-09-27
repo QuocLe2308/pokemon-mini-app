@@ -66,16 +66,100 @@ function generateTypeBadges(types) {
  * @param {Array} abilities - Array of ability objects
  * @returns {string} HTML string for ability badges
  */
+// function generateAbilityBadges(abilities) {
+//     return abilities.map(a => {
+//         const abilityName = a.ability.name.replace('-', ' ');
+//         const isHidden = a.is_hidden;
+//         return `<span class="ability-badge ${isHidden ? 'hidden-ability' : ''}" 
+//                 onclick="showAbilityDetails('${a.ability.name}')" 
+//                 title="${isHidden ? 'Hidden Ability' : 'Normal Ability'}">
+//                 ${abilityName}${isHidden ? ' (Hidden)' : ''}
+//                 </span>`;
+//     }).join('');
+// }
+
 function generateAbilityBadges(abilities) {
-    return abilities.map(a => {
-        const abilityName = a.ability.name.replace('-', ' ');
-        const isHidden = a.is_hidden;
-        return `<span class="ability-badge ${isHidden ? 'hidden-ability' : ''}" 
-                onclick="showAbilityDetails('${a.ability.name}')" 
-                title="${isHidden ? 'Hidden Ability' : 'Normal Ability'}">
-                ${abilityName}${isHidden ? ' (Hidden)' : ''}
-                </span>`;
-    }).join('');
+    return abilities.map(ability => `
+        <span class="ability-badge" onclick="loadAbilityDetails('${ability.ability.name}', '${ability.ability.url}')">
+            ${ability.ability.name.replace('-', ' ')}
+        </span>
+    `).join('');
+}
+
+async function loadAbilityDetails(abilityName, abilityUrl) {
+    try {
+        showError(''); // Clear any existing errors
+        
+        // Show loading state
+        const loadingModal = document.createElement('div');
+        loadingModal.id = 'loadingModal';
+        loadingModal.innerHTML = `
+            <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; display: flex; justify-content: center; align-items: center;">
+                <div style="background: white; padding: 30px; border-radius: 15px; text-align: center;">
+                    <div style="font-size: 18px; margin-bottom: 15px;">Loading ability details...</div>
+                    <div style="width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #667eea; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+                </div>
+            </div>
+            <style>
+                @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+            </style>
+        `;
+        document.body.appendChild(loadingModal);
+        
+        const response = await fetch(abilityUrl);
+        if (!response.ok) throw new Error('Failed to load ability data');
+        
+        const abilityData = await response.json();
+        
+        // Get description in English - try effect_entries first, then flavor_text_entries
+        let description = 'No description available.';
+        
+        if (abilityData.effect_entries && abilityData.effect_entries.length > 0) {
+            const effectEntry = abilityData.effect_entries.find(entry => entry.language.name === 'en');
+            if (effectEntry) {
+                description = effectEntry.effect;
+            }
+        }
+        
+        if (description === 'No description available.' && abilityData.flavor_text_entries && abilityData.flavor_text_entries.length > 0) {
+            const flavorEntry = abilityData.flavor_text_entries.find(entry => entry.language.name === 'en');
+            if (flavorEntry) {
+                description = flavorEntry.flavor_text;
+            }
+        }
+        
+        // Get Pokémon list
+        const pokemonList = abilityData.pokemon.map(p => p.pokemon.name);
+        
+        // Clean up description text
+        const cleanDescription = description
+            .replace(/\f/g, ' ')  // Replace form feed characters
+            .replace(/\n/g, ' ')  // Replace newlines with spaces
+            .replace(/\s+/g, ' ') // Replace multiple spaces with single space
+            .trim();
+        
+        // Remove loading modal
+        const loadingModalToRemove = document.getElementById('loadingModal');
+        if (loadingModalToRemove) {
+            loadingModalToRemove.remove();
+        }
+        
+        // Show modal
+        showAbilityModal(abilityName, {
+            description: cleanDescription,
+            pokemon: pokemonList
+        });
+        
+    } catch (error) {
+        // Remove loading modal on error
+        const loadingModalToRemove = document.getElementById('loadingModal');
+        if (loadingModalToRemove) {
+            loadingModalToRemove.remove();
+        }
+        
+        showError('Failed to load ability details. Please try again.');
+        console.error('Error loading ability:', error);
+    }
 }
 
 /**
@@ -206,7 +290,12 @@ function switchMode(mode) {
     document.querySelectorAll('.mode-btn').forEach(btn => {
         btn.classList.remove('active');
     });
-    event.target.classList.add('active');
+    
+    // Find and highlight the correct button
+    const targetButton = document.querySelector(`[onclick="switchMode('${mode}')"]`);
+    if (targetButton) {
+        targetButton.classList.add('active');
+    }
     
     // Hide all modes
     document.querySelectorAll('.mode-content').forEach(content => {
@@ -345,6 +434,12 @@ function displayPokemonCard(pokemon, cardId, label) {
     const sprite = getPokemonSprite(pokemon.sprites);
     const name = formatPokemonName(pokemon.name);
     
+    // Hide welcome message when displaying Pokémon
+    const battleWelcome = document.getElementById('battleWelcome');
+    if (battleWelcome) {
+        battleWelcome.style.display = 'none';
+    }
+    
     card.innerHTML = `
         <h2>${label}: ${name} #${pokemon.id}</h2>
         <img src="${sprite}" alt="${name}" class="pokemon-sprite">
@@ -423,54 +518,123 @@ function changeMainSprite(spriteUrl) {
  * Show ability details in a modal
  * @param {string} abilityName - Name of the ability
  */
-async function showAbilityDetails(abilityName) {
-    try {
-        const response = await fetch(`https://pokeapi.co/api/v2/ability/${abilityName}`);
-        const ability = await response.json();
+// async function showAbilityDetails(abilityName) {
+//     try {
+//         const response = await fetch(`https://pokeapi.co/api/v2/ability/${abilityName}`);
+//         const ability = await response.json();
         
-        const modal = document.createElement('div');
-        modal.className = 'ability-details-overlay';
-        modal.innerHTML = `
-            <div class="ability-details-modal">
-                <div class="ability-header">
-                    <h2>${ability.name.replace('-', ' ').toUpperCase()}</h2>
-                    <button class="close-btn" onclick="closeAbilityDetails()">&times;</button>
+//         const modal = document.createElement('div');
+//         modal.className = 'ability-details-overlay';
+//         modal.innerHTML = `
+//             <div class="ability-details-modal">
+//                 <div class="ability-header">
+//                     <h2>${ability.name.replace('-', ' ').toUpperCase()}</h2>
+//                     <button class="close-btn" onclick="closeAbilityDetails()">&times;</button>
+//                 </div>
+//                 <div class="ability-content">
+//                     <div class="ability-description">
+//                         <h3>Description</h3>
+//                         <p>${ability.effect_entries.find(e => e.language.name === 'en')?.effect || 'No description available'}</p>
+//                     </div>
+//                     <div class="pokemon-with-ability">
+//                         <h3>Pokémon with this ability</h3>
+//                         <div class="pokemon-list">
+//                             ${ability.pokemon.map(p => 
+//                                 `<span class="pokemon-name" onclick="searchPokemonFromAbility('${p.pokemon.name}')">
+//                                     ${p.pokemon.name.replace('-', ' ')}
+//                                 </span>`
+//                             ).join('')}
+//                         </div>
+//                     </div>
+//                 </div>
+//             </div>
+//         `;
+        
+//         document.body.appendChild(modal);
+//         modal.style.display = 'flex';
+//     } catch (error) {
+//         console.error('Error fetching ability details:', error);
+//         showError('Failed to load ability details');
+//     }
+// }
+
+// /**
+//  * Close ability details modal
+//  */
+// function closeAbilityDetails() {
+//     const modal = document.querySelector('.ability-details-overlay');
+//     if (modal) {
+//         modal.remove();
+//     }
+// }
+// Thay thế hàm hiện tại hiển thị ability modal
+function showAbilityModal(abilityName, abilityData) {
+    // Remove existing modal if any
+    const existingModal = document.getElementById('abilityModalBackdrop');
+    if (existingModal) {
+        existingModal.remove();
+    }
+
+    // Create modal backdrop
+    const backdrop = document.createElement('div');
+    backdrop.id = 'abilityModalBackdrop';
+    backdrop.className = 'ability-modal-backdrop';
+    backdrop.onclick = closeAbilityModal;
+
+    // Create modal content
+    backdrop.innerHTML = `
+        <div class="ability-modal" onclick="event.stopPropagation()">
+            <div class="ability-modal-header">
+                <h2 class="ability-modal-title">${abilityName.toUpperCase()}</h2>
+                <button class="ability-modal-close" onclick="closeAbilityModal()">×</button>
+            </div>
+            <div class="ability-modal-content">
+                <div class="ability-description">
+                    <h3>📋 Description</h3>
+                    <p>${abilityData.description}</p>
                 </div>
-                <div class="ability-content">
-                    <div class="ability-description">
-                        <h3>Description</h3>
-                        <p>${ability.effect_entries.find(e => e.language.name === 'en')?.effect || 'No description available'}</p>
-                    </div>
-                    <div class="pokemon-with-ability">
-                        <h3>Pokémon with this ability</h3>
-                        <div class="pokemon-list">
-                            ${ability.pokemon.slice(0, 20).map(p => 
-                                `<span class="pokemon-name" onclick="searchPokemonFromAbility('${p.pokemon.name}')">
-                                    ${p.pokemon.name.replace('-', ' ')}
-                                </span>`
-                            ).join('')}
-                        </div>
+                
+                <div class="ability-pokemon-list">
+                    <h3>🔍 Pokémon with this ability</h3>
+                    <div class="ability-pokemon-grid">
+                        ${abilityData.pokemon.map(pokemon => `
+                            <div class="ability-pokemon-item" onclick="selectPokemonFromAbility('${pokemon}')">
+                                <div class="ability-pokemon-name">${formatPokemonName(pokemon)}</div>
+                            </div>
+                        `).join('')}
                     </div>
                 </div>
             </div>
-        `;
+        </div>
+    `;
+
+    document.body.appendChild(backdrop);
+    document.body.style.overflow = 'hidden';
+
+    // Show modal with animation
+    setTimeout(() => {
+        backdrop.classList.add('active');
+    }, 10);
+}
+
+function closeAbilityModal() {
+    const backdrop = document.getElementById('abilityModalBackdrop');
+    if (backdrop) {
+        backdrop.classList.remove('active');
+        document.body.style.overflow = 'auto';
         
-        document.body.appendChild(modal);
-        modal.style.display = 'flex';
-    } catch (error) {
-        console.error('Error fetching ability details:', error);
-        showError('Failed to load ability details');
+        setTimeout(() => {
+            if (backdrop.parentNode) {
+                backdrop.remove();
+            }
+        }, 300);
     }
 }
 
-/**
- * Close ability details modal
- */
-function closeAbilityDetails() {
-    const modal = document.querySelector('.ability-details-overlay');
-    if (modal) {
-        modal.remove();
-    }
+function selectPokemonFromAbility(pokemonName) {
+    closeAbilityModal();
+    // Navigate to pokédex with this Pokémon
+    smartNavigate('pokedex', pokemonName, 'view');
 }
 
 /**
@@ -552,6 +716,12 @@ function resetBattle() {
     document.getElementById('playerCard').classList.remove('winner');
     document.getElementById('opponentCard').classList.remove('winner');
     document.getElementById('battleBtn').style.display = 'block';
+    
+    // Show welcome message again
+    const battleWelcome = document.getElementById('battleWelcome');
+    if (battleWelcome) {
+        battleWelcome.style.display = 'block';
+    }
 }
 
 // Quiz Mode Functions
@@ -654,7 +824,6 @@ function showError(message) {
 // List Mode Functions
 async function loadPokemonList() {
     const pokemonList = document.getElementById('pokemonList');
-    const loadBtn = document.getElementById('loadListBtn');
     
     // Reset everything
     pokemonListData = [];
@@ -665,8 +834,6 @@ async function loadPokemonList() {
     console.log('🚀 Starting to load ALL Pokémon...');
     
     pokemonList.innerHTML = '<div class="loading">Loading ALL Pokémon... This may take a moment.</div>';
-    loadBtn.disabled = true;
-    loadBtn.textContent = 'Loading ALL Pokémon...';
     
     try {
         // First, get total count from API
@@ -678,8 +845,6 @@ async function loadPokemonList() {
     } catch (error) {
         console.error('❌ Error loading Pokémon:', error);
         pokemonList.innerHTML = '<div class="error">Error loading Pokémon data. Please try again.</div>';
-        loadBtn.disabled = false;
-        loadBtn.textContent = 'Load Pokémon List';
     }
 }
 
@@ -773,9 +938,6 @@ async function loadAllPokemon() {
     displayPokemonList();
     updatePokemonCount();
     updatePaginationControls();
-    
-    document.getElementById('loadListBtn').disabled = false;
-    document.getElementById('loadListBtn').textContent = `All ${actualTotalPokemon} Pokémon Loaded!`;
 }
 
 function displayPokemonList() {
@@ -1113,8 +1275,17 @@ function resetPokemonList() {
 
 // Initialize the app
 document.addEventListener('DOMContentLoaded', function() {
-    // Set initial mode
+    // Set initial mode to battle and highlight the button
     switchMode('battle');
+    
+    // Manually highlight the battle mode button
+    document.querySelectorAll('.mode-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    const battleBtn = document.querySelector('[onclick="switchMode(\'battle\')"]');
+    if (battleBtn) {
+        battleBtn.classList.add('active');
+    }
     
     // Add enter key support for search
     document.getElementById('searchInput').addEventListener('keypress', function(e) {

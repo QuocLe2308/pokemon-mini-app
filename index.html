@@ -30,6 +30,10 @@
         <div class="main-content">
             <!-- Battle Mode -->
             <div id="battleMode" class="mode-content">
+                <div id="battleWelcome" class="battle-welcome">
+                    <h2>⚔️ Welcome to Battle Mode! ⚔️</h2>
+                    <p>Search for your fighter above, then get a random opponent to start battling!</p>
+                </div>
                 <div id="battleArena" class="battle-arena hidden">
                     <div id="playerCard" class="pokemon-card"></div>
                     <div class="vs-section">
@@ -115,12 +119,11 @@
                     
                     <div class="list-stats">
                         <span id="pokemonCount">Ready to load all Pokémon!</span>
-                        <button onclick="loadPokemonList()" id="loadListBtn">Load All Pokémon</button>
                     </div>
                 </div>
                 
                 <div id="pokemonList" class="pokemon-list">
-                    <div class="loading">Click "Load All Pokémon" to start exploring!</div>
+                    <div class="loading">Loading Pokémon data...</div>
                 </div>
             </div>
 
