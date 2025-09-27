@@ -62,14 +62,20 @@ function generateTypeBadges(types) {
 }
 
 /**
- * Generate ability badges HTML
+ * Generate ability badges HTML with enhanced features
  * @param {Array} abilities - Array of ability objects
  * @returns {string} HTML string for ability badges
  */
 function generateAbilityBadges(abilities) {
-    return abilities.map(a => 
-        `<span class="ability-badge">${a.ability.name.replace('-', ' ')}</span>`
-    ).join('');
+    return abilities.map(a => {
+        const abilityName = a.ability.name.replace('-', ' ');
+        const isHidden = a.is_hidden;
+        return `<span class="ability-badge ${isHidden ? 'hidden-ability' : ''}" 
+                onclick="showAbilityDetails('${a.ability.name}')" 
+                title="${isHidden ? 'Hidden Ability' : 'Normal Ability'}">
+                ${abilityName}${isHidden ? ' (Hidden)' : ''}
+                </span>`;
+    }).join('');
 }
 
 /**
@@ -411,6 +417,71 @@ function displayPokedexEntry(pokemon, speciesData) {
 function changeMainSprite(spriteUrl) {
     const mainSprite = document.querySelector('.pokemon-main-sprite');
     mainSprite.src = spriteUrl;
+}
+
+/**
+ * Show ability details in a modal
+ * @param {string} abilityName - Name of the ability
+ */
+async function showAbilityDetails(abilityName) {
+    try {
+        const response = await fetch(`https://pokeapi.co/api/v2/ability/${abilityName}`);
+        const ability = await response.json();
+        
+        const modal = document.createElement('div');
+        modal.className = 'ability-details-overlay';
+        modal.innerHTML = `
+            <div class="ability-details-modal">
+                <div class="ability-header">
+                    <h2>${ability.name.replace('-', ' ').toUpperCase()}</h2>
+                    <button class="close-btn" onclick="closeAbilityDetails()">&times;</button>
+                </div>
+                <div class="ability-content">
+                    <div class="ability-description">
+                        <h3>Description</h3>
+                        <p>${ability.effect_entries.find(e => e.language.name === 'en')?.effect || 'No description available'}</p>
+                    </div>
+                    <div class="pokemon-with-ability">
+                        <h3>Pokémon with this ability</h3>
+                        <div class="pokemon-list">
+                            ${ability.pokemon.slice(0, 20).map(p => 
+                                `<span class="pokemon-name" onclick="searchPokemonFromAbility('${p.pokemon.name}')">
+                                    ${p.pokemon.name.replace('-', ' ')}
+                                </span>`
+                            ).join('')}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        modal.style.display = 'flex';
+    } catch (error) {
+        console.error('Error fetching ability details:', error);
+        showError('Failed to load ability details');
+    }
+}
+
+/**
+ * Close ability details modal
+ */
+function closeAbilityDetails() {
+    const modal = document.querySelector('.ability-details-overlay');
+    if (modal) {
+        modal.remove();
+    }
+}
+
+/**
+ * Search for a Pokémon from ability modal
+ * @param {string} pokemonName - Name of the Pokémon to search
+ */
+function searchPokemonFromAbility(pokemonName) {
+    closeAbilityDetails();
+    switchMode('pokedex');
+    document.getElementById('searchInput').value = pokemonName;
+    searchPokemon();
 }
 
 function simulateBattle() {
