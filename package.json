@@ -1,0 +1,36 @@
+{
+  "name": "pokemon-battle-arena",
+  "version": "1.0.0",
+  "description": "A comprehensive Pokémon Mini App with battle simulation, Pokédex, and quiz features",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx http-server . -p 3000 -o",
+    "dev": "npx live-server --port=3000 --open=/index.html",
+    "build": "echo 'No build process needed for static site'",
+    "deploy": "echo 'Deploy to your preferred platform'"
+  },
+  "keywords": [
+    "pokemon",
+    "battle",
+    "pokedex",
+    "quiz",
+    "pokeapi",
+    "javascript",
+    "html5",
+    "css3"
+  ],
+  "author": "Pokémon Battle Arena Team",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "live-server": "^1.2.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/pokemon-battle-arena.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/pokemon-battle-arena/issues"
+  },
+  "homepage": "https://yourusername.github.io/pokemon-battle-arena"
+}

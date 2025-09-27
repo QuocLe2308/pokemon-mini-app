@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokémon Battle Arena - Type Matchup Simulator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚔️ Pokémon Battle Arena ⚔️</h1>
+            
+            <div class="mode-selector">
+                <button class="mode-btn active" onclick="switchMode('battle')">⚔️ Battle Mode</button>
+                <button class="mode-btn" onclick="switchMode('pokedex')">📖 Pokédex</button>
+                <button class="mode-btn" onclick="switchMode('list')">📋 Pokémon List</button>
+                <button class="mode-btn" onclick="switchMode('quiz')">🎮 Quiz Mode</button>
+            </div>
+
+            <div class="search-section">
+                <input type="text" id="searchInput" placeholder="Enter Pokémon name or ID (1-1025)">
+                <button onclick="handleSearch()" id="searchBtn">Search Pokémon</button>
+                <button onclick="getRandomPokemon()" id="randomBtn">Random Pokémon</button>
+            </div>
+            <div id="errorMessage"></div>
+        </header>
+
+        <div class="main-content">
+            <!-- Battle Mode -->
+            <div id="battleMode" class="mode-content">
+                <div id="battleArena" class="battle-arena hidden">
+                    <div id="playerCard" class="pokemon-card"></div>
+                    <div class="vs-section">
+                        <div class="vs-text">VS</div>
+                        <button class="battle-button" onclick="simulateBattle()" id="battleBtn" style="display: none;">
+                            🎮 Start Battle!
+                        </button>
+                    </div>
+                    <div id="opponentCard" class="pokemon-card"></div>
+                </div>
+                <div id="battleResult" style="display: none;"></div>
+            </div>
+
+            <!-- Pokedex Mode -->
+            <div id="pokedexMode" class="mode-content hidden">
+                <div id="pokedexView" class="pokedex-view hidden"></div>
+            </div>
+
+            <!-- List Mode -->
+            <div id="listMode" class="mode-content hidden">
+                <div class="list-controls">
+                    <div class="filter-section">
+                        <div class="filter-group">
+                            <label for="typeFilter">Filter by Type:</label>
+                            <select id="typeFilter" onchange="filterPokemonList()">
+                                <option value="">All Types</option>
+                                <option value="normal">Normal</option>
+                                <option value="fire">Fire</option>
+                                <option value="water">Water</option>
+                                <option value="electric">Electric</option>
+                                <option value="grass">Grass</option>
+                                <option value="ice">Ice</option>
+                                <option value="fighting">Fighting</option>
+                                <option value="poison">Poison</option>
+                                <option value="ground">Ground</option>
+                                <option value="flying">Flying</option>
+                                <option value="psychic">Psychic</option>
+                                <option value="bug">Bug</option>
+                                <option value="rock">Rock</option>
+                                <option value="ghost">Ghost</option>
+                                <option value="dragon">Dragon</option>
+                                <option value="dark">Dark</option>
+                                <option value="steel">Steel</option>
+                                <option value="fairy">Fairy</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="generationFilter">Filter by Generation:</label>
+                            <select id="generationFilter" onchange="filterPokemonList()">
+                                <option value="">All Generations</option>
+                                <option value="1">Generation I (1-151)</option>
+                                <option value="2">Generation II (152-251)</option>
+                                <option value="3">Generation III (252-386)</option>
+                                <option value="4">Generation IV (387-493)</option>
+                                <option value="5">Generation V (494-649)</option>
+                                <option value="6">Generation VI (650-721)</option>
+                                <option value="7">Generation VII (722-809)</option>
+                                <option value="8">Generation VIII (810-905)</option>
+                                <option value="9">Generation IX (906-1025)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="sortBy">Sort by:</label>
+                            <select id="sortBy" onchange="sortPokemonList()">
+                                <option value="id">Pokédex Number</option>
+                                <option value="name">Name (A-Z)</option>
+                                <option value="name-desc">Name (Z-A)</option>
+                                <option value="total-stats">Total Stats</option>
+                                <option value="hp">HP</option>
+                                <option value="attack">Attack</option>
+                                <option value="defense">Defense</option>
+                                <option value="speed">Speed</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="listSearchInput">Search Pokémon:</label>
+                            <input type="text" id="listSearchInput" placeholder="Search Pokémon..." onkeyup="filterPokemonList()">
+                        </div>
+                    </div>
+                    
+                    <div class="list-stats">
+                        <span id="pokemonCount">Ready to load all Pokémon!</span>
+                        <button onclick="loadPokemonList()" id="loadListBtn">Load All Pokémon</button>
+                    </div>
+                </div>
+                
+                <div id="pokemonList" class="pokemon-list">
+                    <div class="loading">Click "Load All Pokémon" to start exploring!</div>
+                </div>
+            </div>
+
+            <!-- Quiz Mode -->
+            <div id="quizMode" class="mode-content hidden">
+                <div class="quiz-container">
+                    <div class="quiz-score">Score: <span id="quizScore">0</span> / <span id="quizTotal">0</span></div>
+                    <div id="quizContent">
+                        <button onclick="startNewQuiz()" style="display: block; margin: 20px auto;">Start Quiz!</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
